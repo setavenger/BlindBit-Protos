@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package ipc;
+
+option go_package = "./pb";
+
+// The greeting service definition.
+service IpcService {
+  // Alive pings the daemon and returns true if the daemon is alive
+  rpc Status (Empty) returns (StatusResponse);
+  rpc ListUTXOs(Empty) returns (UTXOCollection);
+  rpc CreateTransaction(CreateTransactionRequest) returns (UTXOCollection);
+}
+
+enum Status {
+  STATUS_UNSPECIFIED = 0;
+  STATUS_STARTING = 1;
+  STATUS_RUNNING = 2;
+  STATUS_SCANNING = 3;
+}
+
+enum UTXOState {
+  UNKNOWN = 0;
+  UNCONFIRMED = 1;
+  UNSPENT = 2;
+  SPENT = 3;
+}
+
+// This is an empty message
+message Empty {}
+
+// The response message containing the greetings
+message StatusResponse {
+  Status status = 1;
+}
+
+message UTXOCollection {
+  repeated OwnedUTXO utxos = 1;  // Array of OwnedUTXO
+}
+
+message OwnedUTXO {
+  bytes txid = 1;
+  uint32 vout = 2;
+  uint64 amount = 3;
+  bytes pub_key = 4;
+  google.protobuf.Timestamp timestamp_confirmed = 5;
+  UTXOState utxo_state = 6;
+  optional bytes label = 7;
+}
+
+message CreateTransactionRequest {
+  repeated TransactionRecipient recipients = 1;
+}
+
+message TransactionRecipient {
+  string address = 1;
+  uint64 amount = 2;
+  string annotation = 3;
+}
+
+message RawTransaction {
+  bytes raw_tx = 1;
+}
