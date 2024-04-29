@@ -10,8 +10,11 @@ option go_package = "./pb";
 service IpcService {
   // Alive pings the daemon and returns true if the daemon is alive
   rpc Status (Empty) returns (StatusResponse);
-  rpc ListUTXOs(Empty) returns (UTXOCollection);
-  rpc CreateTransaction(CreateTransactionRequest) returns (UTXOCollection);
+  rpc Unlock (PasswordRequest) returns (BoolResponse);
+  rpc Shutdown (Empty) returns (BoolResponse);
+  rpc SetPassword (PasswordRequest) returns (BoolResponse);
+  rpc ListUTXOs(Empty) returns (UTXOCollection); // todo add utxo state filter
+  rpc CreateTransaction(CreateTransactionRequest) returns (RawTransaction);
 }
 
 enum Status {
@@ -19,6 +22,7 @@ enum Status {
   STATUS_STARTING = 1;
   STATUS_RUNNING = 2;
   STATUS_SCANNING = 3;
+  STATUS_SHUTTING_DOWN = 4;
 }
 
 enum UTXOState {
@@ -40,6 +44,15 @@ message UTXOCollection {
   repeated OwnedUTXO utxos = 1;  // Array of OwnedUTXO
 }
 
+message PasswordRequest {
+  string password = 1;
+}
+
+message BoolResponse {
+  bool success = 1;
+  string error = 2;  // only filled if success false
+}
+
 message OwnedUTXO {
   bytes txid = 1;
   uint32 vout = 2;
@@ -52,6 +65,7 @@ message OwnedUTXO {
 
 message CreateTransactionRequest {
   repeated TransactionRecipient recipients = 1;
+  int64 feeRate = 2;
 }
 
 message TransactionRecipient {
