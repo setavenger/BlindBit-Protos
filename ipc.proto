@@ -22,6 +22,7 @@ service IpcService {
   rpc GetMnemonic(Empty) returns (Mnemonic);
   rpc SetMnemonic(Mnemonic) returns (BoolResponse);
   rpc CreateNewWallet(NewWalletRequest) returns (Mnemonic);
+  rpc ForceRescanFromHeight(RescanRequest) returns (BoolResponse);
 }
 
 enum Status {
@@ -69,7 +70,7 @@ message OwnedUTXO {
   bytes pub_key = 4;
   google.protobuf.Timestamp timestamp_confirmed = 5;
   UTXOState utxo_state = 6;
-  optional bytes label = 7;
+  optional string label = 7;
 }
 
 message CreateTransactionRequest {
@@ -115,4 +116,8 @@ message Mnemonic {
 message NewWalletRequest {
   string encryptionPassword = 1; // encryptionPassword encrypts the wallet data on disk
   string seedPassphrase = 2; // passphrase is added to the seed
+}
+
+message RescanRequest {
+  uint64 height = 1;
 }
