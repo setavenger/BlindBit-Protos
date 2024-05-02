@@ -10,19 +10,27 @@ option go_package = "./pb";
 service IpcService {
   // Alive pings the daemon and returns true if the daemon is alive
   rpc Status (Empty) returns (StatusResponse);
+  rpc SyncHeight (Empty) returns (SyncHeightResponse);
   rpc Unlock (PasswordRequest) returns (BoolResponse);
+  rpc SetPassword (PasswordRequest) returns (BoolResponse); // todo change to change password
   rpc Shutdown (Empty) returns (BoolResponse);
-  rpc SetPassword (PasswordRequest) returns (BoolResponse);
   rpc ListUTXOs(Empty) returns (UTXOCollection); // todo add utxo state filter
+  rpc ListAddresses(Empty) returns (AddressesCollection);
+  rpc CreateNewLabel(NewLabelRequest) returns (Address);
   rpc CreateTransaction(CreateTransactionRequest) returns (RawTransaction);
+  rpc CreateTransactionAndBroadcast(CreateTransactionRequest) returns (NewTransaction);
+  rpc GetMnemonic(Empty) returns (Mnemonic);
+  rpc SetMnemonic(Mnemonic) returns (BoolResponse);
+  rpc CreateNewWallet(NewWalletRequest) returns (Mnemonic);
 }
 
 enum Status {
   STATUS_UNSPECIFIED = 0;
   STATUS_STARTING = 1;
-  STATUS_RUNNING = 2;
-  STATUS_SCANNING = 3;
-  STATUS_SHUTTING_DOWN = 4;
+  STATUS_LOCKED = 2;
+  STATUS_RUNNING = 3;
+  STATUS_SCANNING = 4;
+  STATUS_SHUTTING_DOWN = 5;
 }
 
 enum UTXOState {
@@ -30,6 +38,7 @@ enum UTXOState {
   UNCONFIRMED = 1;
   UNSPENT = 2;
   SPENT = 3;
+  SPENT_UNCONFIRMED = 4;
 }
 
 // This is an empty message
@@ -76,4 +85,34 @@ message TransactionRecipient {
 
 message RawTransaction {
   bytes raw_tx = 1;
+}
+
+message NewTransaction {
+  string txid = 1;
+}
+
+message AddressesCollection {
+  repeated Address addresses = 1;
+}
+
+message Address {
+  string address = 1;
+  string comment = 2;
+}
+
+message NewLabelRequest {
+  string comment = 1;
+}
+
+message SyncHeightResponse {
+  uint64 height = 1;
+}
+
+message Mnemonic {
+  string mnemonic = 1;
+}
+
+message NewWalletRequest {
+  string encryptionPassword = 1; // encryptionPassword encrypts the wallet data on disk
+  string seedPassphrase = 2; // passphrase is added to the seed
 }
