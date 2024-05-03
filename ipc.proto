@@ -19,6 +19,7 @@ service IpcService {
   rpc CreateNewLabel(NewLabelRequest) returns (Address);
   rpc CreateTransaction(CreateTransactionRequest) returns (RawTransaction);
   rpc CreateTransactionAndBroadcast(CreateTransactionRequest) returns (NewTransaction);
+  rpc BroadcastRawTx(RawTransaction) returns (NewTransaction);
   rpc GetMnemonic(Empty) returns (Mnemonic);
   rpc SetMnemonic(Mnemonic) returns (BoolResponse);
   rpc CreateNewWallet(NewWalletRequest) returns (Mnemonic);
