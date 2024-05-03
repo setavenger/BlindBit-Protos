@@ -28,11 +28,12 @@ service IpcService {
 
 enum Status {
   STATUS_UNSPECIFIED = 0;
-  STATUS_STARTING = 1;
-  STATUS_LOCKED = 2;
-  STATUS_RUNNING = 3;
-  STATUS_SCANNING = 4;
-  STATUS_SHUTTING_DOWN = 5;
+  STATUS_NO_WALLET = 1;
+  STATUS_STARTING = 2;
+  STATUS_LOCKED = 3;
+  STATUS_RUNNING = 4;
+  STATUS_SCANNING = 5;
+  STATUS_SHUTTING_DOWN = 6;
 }
 
 enum UTXOState {
@@ -59,6 +60,7 @@ message PasswordRequest {
   string password = 1;
 }
 
+// todo remove BoolResponse - just returning an error from server overrides this
 message BoolResponse {
   bool success = 1;
   string error = 2;  // only filled if success false
