@@ -6,6 +6,7 @@ package ipc;
 
 option go_package = "./pb";
 
+// todo group endpoints by category
 // The greeting service definition.
 service IpcService {
   // Alive pings the daemon and returns true if the daemon is alive
@@ -23,7 +24,9 @@ service IpcService {
   rpc GetMnemonic(Empty) returns (Mnemonic);
   rpc SetMnemonic(Mnemonic) returns (BoolResponse);
   rpc CreateNewWallet(NewWalletRequest) returns (Mnemonic);
+  rpc RecoverWallet(RecoverWalletRequest) returns (BoolResponse);
   rpc ForceRescanFromHeight(RescanRequest) returns (BoolResponse);
+  rpc GetChain(Empty) returns (Chain);
 }
 
 enum Status {
@@ -42,6 +45,18 @@ enum UTXOState {
   UNSPENT = 2;
   SPENT = 3;
   SPENT_UNCONFIRMED = 4;
+}
+
+enum ChainEnum {
+  Unknown = 0;
+  Mainnet = 1;
+  Testnet = 2;
+  Signet = 3;
+  Regtest = 4;
+}
+
+message Chain {
+  ChainEnum chain = 1;
 }
 
 // This is an empty message
@@ -120,6 +135,14 @@ message NewWalletRequest {
   string encryptionPassword = 1; // encryptionPassword encrypts the wallet data on disk
   string seedPassphrase = 2; // passphrase is added to the seed
 }
+
+message RecoverWalletRequest {
+  string encryptionPassword = 1; // encryptionPassword encrypts the wallet data on disk
+  string Mnemonic = 2;
+  uint64 BirthHeight = 3;
+  optional string seedPassphrase = 4; // passphrase is added to the seed
+}
+
 
 message RescanRequest {
   uint64 height = 1;
