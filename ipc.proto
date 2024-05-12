@@ -88,7 +88,25 @@ message OwnedUTXO {
   bytes pub_key = 4;
   google.protobuf.Timestamp timestamp_confirmed = 5;
   UTXOState utxo_state = 6;
-  optional string label = 7;
+  optional Label label = 7;
+}
+
+// todo remove if not used
+// OwnedUTXOLabeledExt is a version of OwnedUTXO but with the label data being more detailed
+//message OwnedUTXOLabelExt {
+//  bytes txid = 1;
+//  uint32 vout = 2;
+//  uint64 amount = 3;
+//  bytes pub_key = 4;
+//  google.protobuf.Timestamp timestamp_confirmed = 5;
+//  UTXOState utxo_state = 6;
+//  optional Label label = 7;
+//}
+
+message Label {
+  uint32 M = 1;
+  string Comment = 2;
+  string Address = 3;
 }
 
 message CreateTransactionRequest {
