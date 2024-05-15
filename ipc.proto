@@ -17,6 +17,7 @@ service IpcService {
   rpc Shutdown (Empty) returns (BoolResponse);
   rpc ListUTXOs(Empty) returns (UTXOCollection); // todo add utxo state filter
   rpc ListAddresses(Empty) returns (AddressesCollection);
+  rpc ListLabels(Empty) returns (LabelsCollection);
   rpc CreateNewLabel(NewLabelRequest) returns (Address);
   rpc CreateTransaction(CreateTransactionRequest) returns (RawTransaction);
   rpc CreateTransactionAndBroadcast(CreateTransactionRequest) returns (NewTransaction);
@@ -91,23 +92,17 @@ message OwnedUTXO {
   optional Label label = 7;
 }
 
-// todo remove if not used
-// OwnedUTXOLabeledExt is a version of OwnedUTXO but with the label data being more detailed
-//message OwnedUTXOLabelExt {
-//  bytes txid = 1;
-//  uint32 vout = 2;
-//  uint64 amount = 3;
-//  bytes pub_key = 4;
-//  google.protobuf.Timestamp timestamp_confirmed = 5;
-//  UTXOState utxo_state = 6;
-//  optional Label label = 7;
-//}
-
 message Label {
   uint32 M = 1;
   string Comment = 2;
   string Address = 3;
 }
+
+
+message LabelsCollection {
+  repeated Label labels = 1;
+}
+
 
 message CreateTransactionRequest {
   repeated TransactionRecipient recipients = 1;
