@@ -107,6 +107,8 @@ message LabelsCollection {
 message CreateTransactionRequest {
   repeated TransactionRecipient recipients = 1;
   int64 feeRate = 2;
+  bool markSpent = 3;
+  bool useSpentUnconfirmed = 4;
 }
 
 message TransactionRecipient {
@@ -151,12 +153,13 @@ message NewWalletRequest {
 
 message RecoverWalletRequest {
   string encryptionPassword = 1; // encryptionPassword encrypts the wallet data on disk
-  string Mnemonic = 2;
-  uint64 BirthHeight = 3;
-  optional string seedPassphrase = 4; // passphrase is added to the seed
+  string mnemonic = 2;
+  uint64 birthHeight = 3;
+  uint32 labelCount = 4;
+  optional string seedPassphrase = 5; // passphrase is added to the seed
 }
 
 
 message RescanRequest {
-  uint64 height = 1;
+  int64 height = 1;
 }
