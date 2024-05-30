@@ -23,11 +23,14 @@ service IpcService {
   rpc CreateTransactionAndBroadcast(CreateTransactionRequest) returns (NewTransaction);
   rpc BroadcastRawTx(RawTransaction) returns (NewTransaction);
   rpc GetMnemonic(Empty) returns (Mnemonic);
+  rpc GetScanOnlyData(Empty) returns (ScanOnlyDataResponse);
   rpc SetMnemonic(Mnemonic) returns (BoolResponse);
   rpc CreateNewWallet(NewWalletRequest) returns (Mnemonic);
   rpc RecoverWallet(RecoverWalletRequest) returns (BoolResponse);
   rpc ForceRescanFromHeight(RescanRequest) returns (BoolResponse);
   rpc GetChain(Empty) returns (Chain);
+  
+  rpc SetupScanOnly(ScanOnlySetupRequest) returns (BoolResponse);
 }
 
 enum Status {
@@ -159,7 +162,19 @@ message RecoverWalletRequest {
   optional string seedPassphrase = 5; // passphrase is added to the seed
 }
 
+message ScanOnlySetupRequest {
+  string encryptionPassword = 1;
+  bytes scanSecretKey = 2;
+  bytes spendPublicKey = 3;
+  optional uint64 birthHeight =4;
+  optional uint32 labelCount = 5;
+}
 
 message RescanRequest {
   int64 height = 1;
+}
+
+message ScanOnlyDataResponse {
+  bytes scanSecretKey = 1;
+  bytes spendPublicKey = 2;
 }
