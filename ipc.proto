@@ -31,6 +31,7 @@ service IpcService {
   rpc GetChain(Empty) returns (Chain);
   
   rpc SetupScanOnly(ScanOnlySetupRequest) returns (BoolResponse);
+  rpc LoadUTXOs(UTXOCollection) returns (BoolResponse);
 }
 
 enum Status {
@@ -89,16 +90,19 @@ message OwnedUTXO {
   bytes txid = 1;
   uint32 vout = 2;
   uint64 amount = 3;
-  bytes pub_key = 4;
-  google.protobuf.Timestamp timestamp_confirmed = 5;
-  UTXOState utxo_state = 6;
+  bytes publicKey = 4;
+  google.protobuf.Timestamp timestampConfirmed = 5;
+  UTXOState utxoState = 6;
   optional Label label = 7;
+  bytes secretKeyTweak = 8;
 }
 
 message Label {
   uint32 M = 1;
   string Comment = 2;
   string Address = 3;
+  bytes publicKey = 4;
+  bytes tweak = 5;
 }
 
 
